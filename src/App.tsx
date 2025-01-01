@@ -27,7 +27,7 @@ export default function App() {
         <hr className="p-2 w-60 md:w-96" />
         <p className="text-xl text-center my-3">
           <a
-            href="https://www.alimohammad.blog/"
+            href="https://www.ali-mohammad.ir/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-800"
