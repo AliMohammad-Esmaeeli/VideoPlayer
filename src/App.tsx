@@ -1,4 +1,5 @@
 import { useRef, useState } from "react"
+import { Button } from "@nextui-org/react";
 
 export default function App() {
   const [video, setVideo] = useState("");
@@ -25,24 +26,28 @@ export default function App() {
             id=""
             placeholder="آدرس فیلم"
             dir="rtl"
-            className="rounded-lg bg-slate-100 px-5 py-3"
+            className="rounded-lg bg-slate-100 px-6 py-3"
           />
-          <div className="flex justify-center items-center gap-5">
-            <button
+          <div className="flex justify-center items-center gap-4">
+            <Button
               onClick={() => {
                 isPlaying ? videoRef.current?.pause() : videoRef.current?.play();
                 setIsPlaying(!isPlaying);
               }}
-              className="rounded-lg px-5 py-3 bg-gradient-to-r from-indigo-600 to-blue-500 shadow-lg"
+              className="h-11 rounded-lg px-5 py-3 bg-gradient-to-r from-indigo-600 to-blue-500 shadow-lg"
             >
-              پخش
-            </button>
-            <button
+              <p className="text-lg text-slate-50">
+                پخش
+              </p>
+            </Button>
+            <Button
               onClick={() => fileInputRef.current?.click()}
-              className="rounded-lg px-5 py-3 bg-gradient-to-r from-orange-400 to-amber-400 shadow-lg"
+              className="h-11 rounded-lg px-5 py-3 bg-gradient-to-r from-orange-400 to-amber-400 shadow-lg"
             >
+              <p className="text-lg text-slate-50">
               فایل زیر نویس
-            </button>
+              </p>
+            </Button>
             <input
               type="file"
               hidden
