@@ -3,10 +3,15 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: yekanBakh;
-    src: url(../public/fonts/YekanBakh.ttf);
+  font-family: yekanBakh;
+  src: url(../public/fonts/YekanBakh.ttf);
 }
 
 * {
-    font-family: yekanBakh;
+  font-family: yekanBakh;
+}
+
+.plyr--video {
+  border-radius: 0.5rem !important;
+  overflow: hidden;
 }

@@ -1,59 +1,131 @@
-import { useRef, useState } from "react"
+import { useRef, useState } from "react";
 import { Button } from "@nextui-org/react";
+import Plyr from "plyr-react";
+import "plyr-react/plyr.css";
+import type { PlyrSource } from "plyr-react";
+
+type SubtitleTrack = {
+  kind: "subtitles" | "captions";
+  label: string;
+  src: string;
+  srclang: string;
+};
 
 export default function App() {
   const [video, setVideo] = useState("");
 
-  const [isPlaying, setIsPlaying] = useState<Boolean>();
-  const videoRef = useRef<HTMLVideoElement>();
+  const [isPlaying, setIsPlaying] = useState(false);
+  const playerRef = useRef<any>(null);
 
   const [subtitle, setSubtitle] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const videoSrc: PlyrSource = {
+    type: "video",
+    sources: [
+      {
+        src: video,
+        type: "video/mp4",
+      },
+    ],
+    tracks: subtitle
+      ? [
+          {
+            kind: "subtitles",
+            label: "زیرنویس",
+            src: subtitle,
+            srclang: "fa",
+          } as SubtitleTrack,
+        ]
+      : [],
+  };
+
   return (
     <div className="min-h-screen scroll-smooth overflow-x-hidden flex flex-col justify-center items-center">
       <main className="flex flex-col md:flex-row gap-7 mt-[26vh]">
-        <video src={video} className="rounded-lg h-full w-96" controls autoPlay>
-          {
-            subtitle &&
-            <track src={subtitle} kind="subtitles" label="زیرنویس" />
-          }
-        </video>
+        <div className="h-full w-96">
+          <Plyr
+            ref={playerRef}
+            source={videoSrc}
+            options={{
+              autoplay: false,
+              controls: [
+                "play-large",
+                "play",
+                "progress",
+                "current-time",
+                "mute",
+                "volume",
+                "captions",
+                "settings",
+                "pip",
+                "fullscreen",
+              ],
+              settings: ["captions"],
+              i18n: {
+                restart: "شروع مجدد",
+                rewind: "عقب‌گرد",
+                play: "پخش",
+                pause: "توقف",
+                fastForward: "جلو‌گرد",
+                currentTime: "زمان فعلی",
+                duration: "مدت زمان",
+                volume: "صدا",
+                mute: "بی‌صدا",
+                unmute: "باصدا",
+                enableCaptions: "فعال‌سازی زیرنویس",
+                disableCaptions: "غیرفعال‌سازی زیرنویس",
+                enterFullscreen: "تمام‌صفحه",
+                exitFullscreen: "خروج از تمام‌صفحه",
+                captions: "زیرنویس‌ها",
+                settings: "تنظیمات",
+              },
+            }}
+          />
+        </div>
+
         <div className="flex flex-col justify-center items-center gap-3">
           <input
             onChange={(e) => setVideo(e.currentTarget.value)}
-            type="text" name=""
-            id=""
+            type="text"
             placeholder="آدرس فیلم"
             dir="rtl"
             className="rounded-lg bg-slate-100 px-6 py-3"
           />
           <div className="flex justify-center items-center gap-4">
             <Button
-              onClick={() => {
-                isPlaying ? videoRef.current?.pause() : videoRef.current?.play();
-                setIsPlaying(!isPlaying);
+              onPress={() => {
+                // const plyrInstance = playerRef.current?.plyr;
+                // if (plyrInstance) {
+                //   if (isPlaying) {
+                //     plyrInstance.pause();
+                //   } else {
+                //     plyrInstance.play();
+                //   }
+                //   setIsPlaying(!isPlaying);
+                // }
               }}
               className="h-11 rounded-lg px-5 py-3 bg-gradient-to-r from-indigo-600 to-blue-500 shadow-lg"
             >
               <p className="text-lg text-slate-50">
-                پخش
+                {isPlaying ? "توقف" : "پخش"}
               </p>
             </Button>
             <Button
-              onClick={() => fileInputRef.current?.click()}
+              onPress={() => fileInputRef.current?.click()}
               className="h-11 rounded-lg px-5 py-3 bg-gradient-to-r from-orange-400 to-amber-400 shadow-lg"
             >
-              <p className="text-lg text-slate-50">
-              فایل زیر نویس
-              </p>
+              <p className="text-lg text-slate-50">فایل زیر نویس</p>
             </Button>
             <input
               type="file"
               hidden
-              accept=".srt"
+              accept=".srt,.vtt"
               ref={fileInputRef}
-              onChange={(e) => setSubtitle(URL.createObjectURL(e.target.files![0]))}
+              onChange={(e) =>
+                e.target.files?.[0] &&
+                setSubtitle(URL.createObjectURL(e.target.files[0]))
+              }
             />
           </div>
         </div>
@@ -68,10 +140,10 @@ export default function App() {
             className="text-blue-800"
           >
             Ali Mohammad Esmaeeli
-          </a> {"  "}
-          | Copyright-© {new Date().getFullYear()}
+          </a>{" "}
+          {"  "}| Copyright-© {new Date().getFullYear()}
         </p>
       </footer>
     </div>
-  )
+  );
 }
