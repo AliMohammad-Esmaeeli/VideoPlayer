@@ -95,6 +95,7 @@ export default function App() {
           <div className="flex justify-center items-center gap-4">
             <Button
               onPress={() => {
+                setIsPlaying((prev) => !prev);
                 // const plyrInstance = playerRef.current?.plyr;
                 // if (plyrInstance) {
                 //   if (isPlaying) {
