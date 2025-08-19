@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Button } from "@nextui-org/react";
 import Plyr from "plyr-react";
 import "plyr-react/plyr.css";
@@ -13,6 +13,11 @@ type SubtitleTrack = {
 
 export default function App() {
   const [video, setVideo] = useState("");
+  const params = new URLSearchParams(window.location.search);
+
+  useEffect(() => {
+    params.get("link") && setVideo(params.get("link")!)
+  }, [])
 
   const [isPlaying, setIsPlaying] = useState(false);
   const playerRef = useRef<any>(null);
@@ -30,13 +35,13 @@ export default function App() {
     ],
     tracks: subtitle
       ? [
-          {
-            kind: "subtitles",
-            label: "زیرنویس",
-            src: subtitle,
-            srclang: "fa",
-          } as SubtitleTrack,
-        ]
+        {
+          kind: "subtitles",
+          label: "زیرنویس",
+          src: subtitle,
+          srclang: "fa",
+        } as SubtitleTrack,
+      ]
       : [],
   };
 
@@ -62,31 +67,20 @@ export default function App() {
                 "fullscreen",
               ],
               settings: ["captions"],
-              i18n: {
-                restart: "شروع مجدد",
-                rewind: "عقب‌گرد",
-                play: "پخش",
-                pause: "توقف",
-                fastForward: "جلو‌گرد",
-                currentTime: "زمان فعلی",
-                duration: "مدت زمان",
-                volume: "صدا",
-                mute: "بی‌صدا",
-                unmute: "باصدا",
-                enableCaptions: "فعال‌سازی زیرنویس",
-                disableCaptions: "غیرفعال‌سازی زیرنویس",
-                enterFullscreen: "تمام‌صفحه",
-                exitFullscreen: "خروج از تمام‌صفحه",
-                captions: "زیرنویس‌ها",
-                settings: "تنظیمات",
-              },
             }}
           />
         </div>
 
         <div className="flex flex-col justify-center items-center gap-3">
           <input
-            onChange={(e) => setVideo(e.currentTarget.value)}
+            value={video}
+            onChange={(e) => {
+              e.preventDefault();
+              if (e.currentTarget.value) {
+                setVideo(e.currentTarget.value);
+                window.location.search = `?link=${video}`;
+              }
+            }}
             type="text"
             placeholder="آدرس فیلم"
             dir="rtl"
@@ -96,15 +90,15 @@ export default function App() {
             <Button
               onPress={() => {
                 setIsPlaying((prev) => !prev);
-                // const plyrInstance = playerRef.current?.plyr;
-                // if (plyrInstance) {
-                //   if (isPlaying) {
-                //     plyrInstance.pause();
-                //   } else {
-                //     plyrInstance.play();
-                //   }
-                //   setIsPlaying(!isPlaying);
-                // }
+                const plyrInstance = playerRef.current?.plyr;
+                if (plyrInstance) {
+                  if (isPlaying) {
+                    plyrInstance.pause();
+                  } else {
+                    plyrInstance.play();
+                  }
+                  setIsPlaying(!isPlaying);
+                }
               }}
               className="h-11 rounded-lg px-5 py-3 bg-gradient-to-r from-indigo-600 to-blue-500 shadow-lg"
             >
