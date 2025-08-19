@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@nextui-org/react";
 import Plyr from "plyr-react";
 import "plyr-react/plyr.css";
@@ -13,11 +13,6 @@ type SubtitleTrack = {
 
 export default function App() {
   const [video, setVideo] = useState("");
-  const params = new URLSearchParams(window.location.search);
-
-  useEffect(() => {
-    params.get("link") && setVideo(params.get("link")!)
-  }, [])
 
   const [isPlaying, setIsPlaying] = useState(false);
   const playerRef = useRef<any>(null);
@@ -76,10 +71,7 @@ export default function App() {
             value={video}
             onChange={(e) => {
               e.preventDefault();
-              if (e.currentTarget.value) {
-                setVideo(e.currentTarget.value);
-                window.location.search = `?link=${video}`;
-              }
+              setVideo(e.currentTarget.value);
             }}
             type="text"
             placeholder="آدرس فیلم"
