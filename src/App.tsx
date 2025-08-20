@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { Button } from "@nextui-org/react";
 import Plyr from "plyr-react";
 import "plyr-react/plyr.css";
-import type { PlyrSource } from "plyr-react";
+import type { PlyrOptions, PlyrSource } from "plyr-react";
 
 type SubtitleTrack = {
   kind: "subtitles" | "captions";
@@ -40,6 +40,12 @@ export default function App() {
       : [],
   };
 
+  const plyrOptions: PlyrOptions = {
+    controls: ['play', 'progress', 'current-time', 'settings', 'mute', 'volume', "captions", "pip", 'fullscreen'],
+    autoplay: true,
+    loop: { active: true },
+  };
+
   return (
     <div className="min-h-screen scroll-smooth overflow-x-hidden flex flex-col justify-center items-center">
       <main className="flex flex-col md:flex-row gap-7 mt-[26vh]">
@@ -47,22 +53,7 @@ export default function App() {
           <Plyr
             ref={playerRef}
             source={videoSrc}
-            options={{
-              autoplay: false,
-              controls: [
-                "play-large",
-                "play",
-                "progress",
-                "current-time",
-                "mute",
-                "volume",
-                "captions",
-                "settings",
-                "pip",
-                "fullscreen",
-              ],
-              settings: ["captions"],
-            }}
+            options={plyrOptions}
           />
         </div>
 
